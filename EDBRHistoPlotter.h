@@ -16,10 +16,9 @@
 #include "TMath.h"
 #include "TLatex.h" 
 #include "CMS_lumi.C"
-//#include "/Volumes/ExHard/WG_normalisation/WG_normalisation.C" 
-
-//double kfactor = 1.44018;
-double kfactor = 1;
+#include "TGraphAsymmErrors.h"
+#include "TGraphErrors.h"
+double kfactor=1.0;  
 
 class EDBRHistoPlotter {
 public:
@@ -60,8 +59,8 @@ public:
     else
       isDataPresent_ = false;
     std::cout << "Check" << std::endl;
-    EDBRColors.resize(20, kWhite);
-    EDBRLineColors.resize(20, kWhite);
+    EDBRColors.resize(20, kBlack);
+    EDBRLineColors.resize(20, kBlack);
     std::cout << "Check" << std::endl;
     labels.resize(0);
     labelsSig.resize(0);
@@ -148,8 +147,7 @@ public:
   /// set reasonable colors for stacks.
   void setFillColor(std::vector<int> colorList)
   {
-//    unsigned int ind = 0;
-	unsigned int ind = 0;
+    unsigned int ind = 0;
     while (ind < 20 && ind < colorList.size()) {
       EDBRColors.at(ind) = colorList.at(ind);
       ind++;
@@ -160,7 +158,7 @@ public:
   int getLineColor(int index)
   {
     if (index < 20)return EDBRLineColors[index];
-    return kWhite;
+    return kBlack;
   }
 
   /// set reasonable colors for stacks.
@@ -231,8 +229,7 @@ void EDBRHistoPlotter::makeLabels()
   std::cout << "Labels MC done" << std::endl;
 
   for (size_t i = 0; i != fileNamesMCSig.size(); i++) {
-//cout<<endl<<endl<<"!!!signal is in!!!"<<endl<<endl;
-  	TString s1 = fileNamesMCSig.at(i);
+    TString s1 = fileNamesMCSig.at(i);
     TString s2 = "_.";
     TObjArray* tokens = s1.Tokenize(s2);
 
@@ -283,7 +280,7 @@ void EDBRHistoPlotter::makeStackPlots(std::string histoName)
   //printf("Making histo %s\n",histoName.c_str());
   std::cout << "\rMaking histo " << histoName.c_str() << std::endl;
 
-  TCanvas* cv = new TCanvas(("cv_" + histoName).c_str(), ("cv_" + histoName).c_str(), 600, 600);
+  TCanvas* cv = new TCanvas(("cv_" + histoName).c_str(), ("cv_" + histoName).c_str(), 700, 600);
 
   //create 3 pads in the canvas
   TPad* fPads1 = NULL;
@@ -291,8 +288,8 @@ void EDBRHistoPlotter::makeStackPlots(std::string histoName)
 //  TPad* fPads3 = NULL;
 
   if (makeRatio_ && isDataPresent_) {
-    fPads1 = new TPad("pad1", "", 0.00, 0.20, 0.99, 0.99);
-    fPads2 = new TPad("pad2", "", 0.00, 0.00, 0.99, 0.20);
+    fPads1 = new TPad("pad1", "", 0.00, 0.25, 0.99, 0.99);
+    fPads2 = new TPad("pad2", "", 0.00, 0.00, 0.99, 0.25);
     //fPads2 = new TPad("pad2", "", 0.00, 0.20, 0.99, 0.40);
     //fPads3 = new TPad("pad3", "", 0.00, 0.00, 0.99, 0.20);
     fPads1->SetFillColor(0);
@@ -345,8 +342,11 @@ void EDBRHistoPlotter::makeStackPlots(std::string histoName)
   }
 
   double sumDataIntegral = 0;
+  double sumDataIntegralerr;
+  int sumDataIntegraln = sumDATA->GetNbinsX();
   if (isDataPresent_)
-    sumDataIntegral = sumDATA->Integral();
+    sumDataIntegral = sumDATA->IntegralAndError(1,sumDataIntegraln,sumDataIntegralerr);
+
 
 	cout<<"!!!! data integral = "<<sumDataIntegral<<endl;
   ///------------------
@@ -365,7 +365,17 @@ void EDBRHistoPlotter::makeStackPlots(std::string histoName)
 Double_t MC_inte;
 
   double sumBkgOther = 0.;
+  double sumBkgOthererr = 0;
+  double sumBkgOthererrpre;
+  int sumBkgOthern;
+
   double sumWJets = 0.;
+  double sumWJetserr;
+  int sumWJetsn;
+
+  double sumWAJJ = 0;
+
+
   for (size_t i = 0; i != filesMC.size(); ++i) {
     TH1D* histo = (TH1D*)(filesMC.at(i)->Get(histoName.c_str())->Clone(labels.at(i).c_str()));
     histo->Scale(kFactorsMC_.at(i));
@@ -431,22 +441,22 @@ Double_t MC_inte;
   }
 
   THStack* hs = new THStack("hs", "");
-//hs->GetYaxis()->SetRangeUser(1,100);
+
   // Make a histogram just for the sum
   for (size_t i = 0; i != histosMC.size(); ++i) {
-    histosMC.at(i)->SetFillColor(getFillColor(i));
-    sumMC->Add(histosMC.at(i));
 
+    histosMC.at(i)->SetFillColor(getFillColor(i));
+    histosMC.at(i)->SetLineColor(kBlack);
+    histosMC.at(i)->SetLineWidth(1);
+    sumMC->Add(histosMC.at(i));
     hs->Add(histosMC.at(i));
   }
-
-
 
 
   sumMC->SetFillStyle(0);
 //  sumMC->SetLineColor(kBlack);
 //  sumMC->SetLineColor(0);
-  sumMC->SetLineWidth(2);
+
 
   if (scaleToData_ && isDataPresent_) {
     std::cout << "===> Residual DATA/MC Scale Factor is: " << sumDataIntegral / sumBkgAtTargetLumi << std::endl;
@@ -460,9 +470,8 @@ Double_t num_inte1, num_inte2;
 
   for (size_t i = 0; i != fileNamesMCSig.size(); ++i) {
     filesMCSig.push_back(TFile::Open((nameInDir_ +
-                                      fileNamesMCSig.at(i)).c_str()));
-  
-	}
+                                      fileNamesMCSig.at(i)).c_str())); 
+  }
 
   for (size_t i = 0; i != filesMCSig.size(); ++i) {
 
@@ -470,17 +479,17 @@ Double_t num_inte1, num_inte2;
     TH1D* histo = (TH1D*)(filesMCSig.at(i)->Get(histoName.c_str())->Clone(labelsSig.at(i).c_str()));
     TH1D* histoOrig = (TH1D*)(filesMCSig.at(i)->Get(histoName.c_str())->Clone(labelsSig.at(i).c_str()));
     histo->SetDirectory(0);
-    histo->SetLineColor(2);
+    histo->SetLineColor(kBlack);
     histo->SetFillColor(2);
+    histo->SetLineWidth(1);
 // the num_inte and num_inte2 are not scaled. should not believe this!
 //num_inte2 = histo->Integral(); cout<<"num inte2 !!!!!!!!"<<num_inte2<<endl;
 
 num_inte1 = histoOrig->Integral();
 
     histoOrig->SetDirectory(0);
-     histoOrig->SetLineColor(getLineColor(i));
-     histoOrig->SetFillColor(getLineColor(i));	
-
+    histoOrig->SetLineColor(getLineColor(i));
+    histoOrig->SetFillColor(getLineColor(i));
     if (i % 2 == 0)histoOrig->SetFillStyle(3004);
     else histoOrig->SetFillStyle(3005);
     //histo->Scale(kFactor_); //============= SCALE FACTORS FOR SIGNAL? ==== FIXME
@@ -517,79 +526,44 @@ num_inte1 = histoOrig->Integral();
   hs->Draw("HIST");
  // hs->GetXaxis()->SetTitle(histoName.c_str());
   hs->GetYaxis()->SetTitle("Events/bin");//40.24pb-1");
-  hs->GetYaxis()->SetTitleOffset(1.15);
+  hs->GetYaxis()->SetTitleSize(0.05);
+  hs->GetYaxis()->SetTitleOffset(0.9);
 //  hs->GetYaxis()->CenterTitle();
-//  hs->GetYaxis()->SetRangeUser(1,100);
   
-  double maximumMC = 1.4 * sumMC->GetMaximum();
+  double maximumMC = 1.5 * sumMC->GetMaximum();
   double maximumDATA = -100;
   if (isDataPresent_)
-    maximumDATA = 1.15 * sumDATA->GetMaximum();
+    maximumDATA = 1.5 * sumDATA->GetMaximum();
   double maximumForStack = -100;
   if (isDataPresent_)
     maximumForStack = (maximumMC > maximumDATA ? maximumMC : maximumDATA);
   else
     maximumForStack = maximumMC;
-//  hs->SetMaximum(maximumForStack/10);
-	hs->SetMaximum(maximumForStack);
-// Some hacks for better aestetics
+  hs->SetMaximum(maximumForStack);
+  // Some hacks for better aestetics
   // Extra vertical space in eta plots
-//  hs->SetMinimum(10.0);
+  hs->SetMinimum(1.0);
     if (isDataPresent_) {
           sumDATA->SetMarkerColor(1);
           sumDATA->SetMarkerStyle(20);
-          sumDATA->Draw("SAME EP");  }
+          sumDATA->Draw("SAME EP"); 
+ }
 
    // histosMCSig.at(0)->Draw("SAME HIST");
       
   // For the legend, we have to tokenize the name "histos_XXX.root"
-  TLegend* leg = new TLegend(0.54, 0.7, 0.88, 0.88);
+  TLegend* leg = new TLegend(0.75, 0.55, 0.88, 0.85);
+  TLegend* leg2 = new TLegend(0.5, 0.6, 0.72, 0.85);  //every 0.055 a draw in y axis
+  leg->SetTextSize(0.02);
+  leg2->SetTextSize(0.02);
+
   leg->SetMargin(0.4);
   if (isDataPresent_)
-    leg->AddEntry(sumDATA, "Data", "ep");
-  for (size_t i = 0; i != histosMC.size(); ++i)
-	{
-/*		if(i==0 || i==1 ) continue;
-		if(i==2) {leg->AddEntry(histosMC.at(i), "Z and dibosons", "f"); continue; }
-		
-		if(i==3 || i==4 || i==5) continue;
-		if(i==6) {leg->AddEntry(histosMC.at(i), "Top", "f"); continue; }
-//		if(i==6) {leg->AddEntry(histosMC.at(i), "Fake photon", "f"); continue; }
-		if(i==7) {leg->AddEntry(histosMC.at(i), "QCD", "f"); continue;}
-	leg->AddEntry(histosMC.at(i), labels.at(i).c_str(), "f"); 
-*/
-/*
-//		if(i==0) {leg->AddEntry(histosMC.at(i), "ZG", "f"); continue; }
-//		if(i==1) {leg->AddEntry(histosMC.at(i), "ZJets", "f"); continue; }
-		if(i==0 ) continue;
-//		if(i==2) {leg->AddEntry(histosMC.at(i), "VV", "f"); continue; }
-		if(i==1) {leg->AddEntry(histosMC.at(i), "Z and dibosons", "f"); continue; }
-//		if(i==3 || i==4 ) continue;
-		if(i==2) continue;
-//		if(i==3) {leg->AddEntry(histosMC.at(i), "ST", "f"); continue; }
-//		if(i==4) {leg->AddEntry(histosMC.at(i), "TTG", "f"); continue; }
-//		if(i==5) {leg->AddEntry(histosMC.at(i), "TTJets", "f"); continue; }
-//		if(i==6) {leg->AddEntry(histosMC.at(i), "TTbar", "f"); continue; }
-		if(i==3) {leg->AddEntry(histosMC.at(i), "Top", "f"); continue; }
-//		if(i==4) {leg->AddEntry(histosMC.at(i), "WJets", "f"); continue; }
-//		if(i==4 || i==5) continue;
-//		if(i==6) {leg->AddEntry(histosMC.at(i), "Fake Photon", "f"); continue; }
-		if(i==4) {leg->AddEntry(histosMC.at(i), "WG", "f"); continue; }
-		if(i==5 || i==6) continue;
-		if(i==7) {leg->AddEntry(histosMC.at(i), "Fake Photon", "f"); continue; }
-		if(i==8) {leg->AddEntry(histosMC.at(i), "TTJets", "f"); continue; }
-		if(i==9) {leg->AddEntry(histosMC.at(i), "ZJets", "f"); continue; }
-*/
-	if(i==0) {leg->AddEntry(histosMC.at(i), "ST_s", "f"); continue; }
-	if(i==1) {leg->AddEntry(histosMC.at(i), "TTG_s", "f"); continue; }
-	if(i==2) {leg->AddEntry(histosMC.at(i), "VV_s", "f"); continue; }
-	if(i==3) {leg->AddEntry(histosMC.at(i), "ZG_s", "f"); continue; }
-	if(i==4) {leg->AddEntry(histosMC.at(i), "WJets_s", "f"); continue; }
-	if(i==5) {leg->AddEntry(histosMC.at(i), "ZJets_s", "f"); continue; }
-//	if(i==4) {leg->AddEntry(histosMC.at(i), "Fake photon", "f"); continue; }
-	if(i==6) {leg->AddEntry(histosMC.at(i), "TTJets_s", "f"); continue; }
-	if(i==7) {leg->AddEntry(histosMC.at(i), "WG_s", "f"); continue; }
-	}
+    leg2->AddEntry(sumDATA, "Data", "ep");
+  for (size_t i = 0; i != histosMC.size(); ++i){
+	if(i<6){leg->AddEntry(histosMC.at(i), labels.at(i).c_str(), "f"); }
+	else{leg2->AddEntry(histosMC.at(i), labels.at(i).c_str(), "f");}
+}
  
   if (histosMCSig.size() > 0) {
     char rescalingLabel[64];
@@ -597,15 +571,16 @@ num_inte1 = histoOrig->Integral();
       sprintf(rescalingLabel, " (x%g)", kFactorsSig_.at(i));
       std::string rescalingStr(rescalingLabel);
       if (kFactorsSig_.at(i) != 2.0){
-        if(i==0) leg->AddEntry(histosMCSig.at(i), "EWK_WA+2Jets", "lf");
+        if(i==0) leg2->AddEntry(histosMCSig.at(i), "EWK W#gamma+2Jets", "f");
 	}
-      else leg->AddEntry(histosMCSig.at(i), (labelsSig.at(i)).c_str(), "lf");
+      else leg2->AddEntry(histosMCSig.at(i), (labelsSig.at(i)).c_str(), "f");
     }
   }
  
 
-  leg->SetFillColor(kWhite);
-  leg->Draw();
+  leg->SetFillStyle(0);
+  leg2->SetFillStyle(0);
+
 
   // Nice labels
  // TMathText* l = makeCMSPreliminaryTop(13, 0.50, 0.935);
@@ -617,83 +592,106 @@ num_inte1 = histoOrig->Integral();
   TLine* lineAtPlusTwo = NULL;
   TLine* lineAtMinusTwo = NULL;
   if (makeRatio_ && isDataPresent_) {
-    fPads2->cd();
 
-    fPads2->SetGridx();
-    fPads2->SetGridy();
 
-    double thisYmin = -5;  //-5
-    double thisYmax = 5;   //5
+	double thisYmin = 0.5;  //-5
+	double thisYmax = 1.5;  //5
 
-    TVectorD nsigma_x(sumDATA->GetNbinsX());
-    TVectorD nsigma_y(sumDATA->GetNbinsX());
+//    TVectorD nsigma_x(sumDATA->GetNbinsX());
+//    TVectorD nsigma_y(sumDATA->GetNbinsX());
 
-    for (int ibin = 0; ibin != sumDATA->GetNbinsX(); ++ibin) {
+int binnumber=sumMC->GetNbinsX();
+double nsigma_x[binnumber],nsigma_y[binnumber];
+double Data[binnumber],Bkg[binnumber],eData[binnumber],eBkg[binnumber],x[binnumber],halfwidth[binnumber],ex[binnumber],ey[binnumber],sigma[binnumber];
 
-      double Data = sumDATA->GetBinContent(ibin + 1);
-      double Bkg = sumMC->GetBinContent(ibin + 1);
-      double eData = sumDATA->GetBinError(ibin + 1);
-      double eBkg = sumMC->GetBinError(ibin + 1);
-      double x = sumDATA->GetBinCenter(ibin + 1);
 
-      double diff = Data - Bkg;
-      double sigma = sqrt((eData * eData) + (eBkg * eBkg));
+    for (int ibin = 0; ibin != binnumber; ++ibin) 
+	{
 
-      if (sigma != 0.0 && Data != 0.0) {
-        nsigma_x[ibin] = x;
-        nsigma_y[ibin] = diff / sigma;
+      Data[ibin] = sumDATA->GetBinContent(ibin + 1);
+      Bkg[ibin] = sumMC->GetBinContent(ibin + 1);
+      eData[ibin] = sumDATA->GetBinError(ibin + 1);
+      eBkg[ibin] = sumMC->GetBinError(ibin + 1);
+      x[ibin] = sumDATA->GetBinCenter(ibin + 1);
+	halfwidth[ibin]=sumMC->GetBinWidth(ibin + 1)/2;
+
+      double diff = Data[ibin] - Bkg[ibin];
+	double difference = Data[ibin]/Bkg[ibin];
+      sigma[ibin] = sqrt((eData[ibin] * eData[ibin]) + (eBkg[ibin] * eBkg[ibin]));
+	ex[ibin]=0;ey[ibin]=sqrt(eData[ibin]*eData[ibin]/Bkg[ibin]/Bkg[ibin]+Data[ibin]*Data[ibin]*eBkg[ibin]*eBkg[ibin]/Bkg[ibin]/Bkg[ibin]/Bkg[ibin]/Bkg[ibin]);
+
+      if (sigma[ibin] != 0.0 && Data[ibin] != 0.0) {
+        nsigma_x[ibin] = x[ibin];
+        nsigma_y[ibin] = difference;   //diff / sigma;
       } else {
         nsigma_x[ibin] = +999999;
         nsigma_y[ibin] = 0;
-      }
-    }
+	      }
+	 }
+
+    fPads1->cd();
+//double hsmax=hs->GetMaximum();  //maximumForStack   min=0.1
+//double hsmin=hs->GetMinimum();
+double xlow=x[0]-halfwidth[0];  double xhigh=x[binnumber-1]+halfwidth[binnumber-1];
+TH2F *hempty=new TH2F("hempty","hempty",binnumber,xlow,xhigh,10000,0.1,maximumForStack);
+
+	TGraphAsymmErrors *gr=new TGraphAsymmErrors(binnumber,x,Bkg,halfwidth,halfwidth,eBkg,eBkg);
+	gr->SetFillStyle(3004);
+	hempty->Draw("same");
+	gr->Draw("2same");
+	leg2->AddEntry(gr, "MC unc", "f");
+	leg->Draw();
+	  leg2->Draw("same");
+    fPads1->Update();
 
 
-    if (nsigma_x.GetNoElements() != 0) {
-      TGraph *nsigmaGraph = new TGraph(nsigma_x, nsigma_y);
+    fPads2->cd();
+
+//    fPads2->SetGridx();
+    fPads2->SetGridy();
+
+//    if (nsigma_x.GetNoElements() != 0) {
+      //TGraph *nsigmaGraph = new TGraph(nsigma_x, nsigma_y);
+TGraphErrors *nsigmaGraph = new TGraphErrors(binnumber, nsigma_x, nsigma_y, ex, ey);
       nsigmaGraph->SetTitle("");
       nsigmaGraph->GetYaxis()->SetRangeUser(thisYmin, thisYmax);
-//      nsigmaGraph->GetYaxis()->SetTitle("(Data-MC)/sigma_sta#sigma");
-	  nsigmaGraph->GetYaxis()->SetTitle("(Data-MC)/#sigma");
+      nsigmaGraph->GetYaxis()->SetTitle("Data/MC");     //("(Data-Bkg)/#sigma");
       nsigmaGraph->GetYaxis()->CenterTitle();
-      nsigmaGraph->GetYaxis()->SetTitleOffset(0.23); //0.43
-      nsigmaGraph->GetYaxis()->SetTitleSize(0.1);    //0.1
-      nsigmaGraph->GetYaxis()->SetLabelSize(0.10);  //0.06
+      nsigmaGraph->GetYaxis()->SetTitleOffset(0.27);
+      nsigmaGraph->GetYaxis()->SetTitleSize(0.15);
+      nsigmaGraph->GetYaxis()->SetLabelSize(0.06);
       nsigmaGraph->GetXaxis()->SetTitle(histoName.c_str());
-        nsigmaGraph->GetXaxis()->SetTitleSize(0.2);  //0.1
+        nsigmaGraph->GetXaxis()->SetTitleSize(0.1);
       nsigmaGraph->GetXaxis()->SetLimits(sumMC->GetXaxis()->GetXmin() , sumMC->GetXaxis()->GetXmax());
       nsigmaGraph->GetXaxis()->SetRangeUser(sumMC->GetXaxis()->GetXmin() , sumMC->GetXaxis()->GetXmax());
-      nsigmaGraph->GetXaxis()->SetTitleOffset(0.6); //0.9
-      nsigmaGraph->GetXaxis()->SetLabelSize(0.16);  //0.08
+      nsigmaGraph->GetXaxis()->SetTitleOffset(0.9);
+      nsigmaGraph->GetXaxis()->SetLabelSize(0.08);
       nsigmaGraph->SetMarkerStyle(8);
-      nsigmaGraph->SetMarkerSize(1.5);  //1.5
+      nsigmaGraph->SetMarkerSize(1.);
       nsigmaGraph->Draw("ape");
-    }
+//    }
 
     fPads2->Update();
 
-    lineAtZero = new TLine(sumMC->GetXaxis()->GetXmin(), 0, sumMC->GetXaxis()->GetXmax(), 0);
-    lineAtZero->SetLineColor(2);
-    lineAtZero->Draw();
-    lineAtPlusTwo = new TLine(sumMC->GetXaxis()->GetXmin(), 2, sumMC->GetXaxis()->GetXmax(), 2);
+//    lineAtZero = new TLine(sumMC->GetXaxis()->GetXmin(), 0, sumMC->GetXaxis()->GetXmax(), 0);
+//    lineAtZero->SetLineColor(2);
+//    lineAtZero->Draw();
+    lineAtPlusTwo = new TLine(sumMC->GetXaxis()->GetXmin(), 1, sumMC->GetXaxis()->GetXmax(), 1);
     lineAtPlusTwo->SetLineColor(2);
     lineAtPlusTwo->SetLineStyle(2);
+    lineAtPlusTwo->SetLineWidth(2);
     lineAtPlusTwo->Draw();
-    lineAtMinusTwo = new TLine(sumMC->GetXaxis()->GetXmin(), -2, sumMC->GetXaxis()->GetXmax(), -2);
-    lineAtMinusTwo->SetLineColor(2);
-    lineAtMinusTwo->SetLineStyle(2);
-    lineAtMinusTwo->Draw();
+//    lineAtMinusTwo = new TLine(sumMC->GetXaxis()->GetXmin(), -2, sumMC->GetXaxis()->GetXmax(), -2);
+//    lineAtMinusTwo->SetLineColor(2);
+//    lineAtMinusTwo->SetLineStyle(2);
+//    lineAtMinusTwo->Draw();
   }
 
 //  char bufferstr[20];
 //  sprintf(bufferstr, "%.3f",targetLumi_);
 //  CMS_lumi(fPads1,4,0, bufferstr);
-//  CMS_lumi(fPads1,4,0, "2.30");
-//	CMS_lumi(fPads1,4,0, "4.30");
-//	CMS_lumi(fPads1,4,0, "2.60");
-//	CMS_lumi(fPads1,4,0, "35.133");
-//	CMS_lumi(fPads1,4,0, "4.353");
-	CMS_lumi(fPads1,4,0, "12.516");
+  CMS_lumi(fPads1,4,0, "35.103");
+
 // Save the picture
   char buffer[256];
   cv->SetLogy(false);
@@ -712,9 +710,9 @@ num_inte1 = histoOrig->Integral();
   }
   //-- resize y axis --
   hs->SetMaximum(10 * maximumForStack);
-//	hs->SetMaximum(maximumForStack/10);
+  //	hs->SetMaximum(maximumForStack/10);
 
-	hs->SetMinimum(0.1);
+//	hs->SetMinimum(0.1);
 //
   cv->SetLogy(true);
   cv->Update();
