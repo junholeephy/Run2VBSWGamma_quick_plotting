@@ -235,7 +235,9 @@ class EDBRHistoMaker {
   // Our added functions
   void createAllHistos();
   void printAllHistos();
+  void printAllHistos2();
   void saveAllHistos(std::string outFileName);
+  void saveAllHistos2(std::string outFileName);
 
   void setWantElectrons(bool doele=false){wantElectrons_=doele;}
   void setWantMuons(bool domu=false){wantMuons_=domu;}
@@ -263,6 +265,7 @@ class EDBRHistoMaker {
 
   // Our added variables
   int nVars;
+  int nVars2;
   bool wantElectrons_;
   bool wantMuons_;
   bool wantSideband_;
@@ -287,8 +290,9 @@ class EDBRHistoMaker {
 //  double zeppen_1_;
 
   // The histograms
-  HistoFactory hs;
+  HistoFactory hs, hs2;
   std::map<std::string,TH1D*> theHistograms;
+  std::map<std::string,TH1D*> theHistograms2;
   TH2D *hmjmzz; 
   TH1D *hmzzNEW;
 };
@@ -428,6 +432,7 @@ EDBRHistoMaker::EDBRHistoMaker(TTree* tree,
   Init(tree);
   createAllHistos();
   printAllHistos();
+  printAllHistos2();
 }
 
 EDBRHistoMaker::~EDBRHistoMaker() {
@@ -463,42 +468,53 @@ void EDBRHistoMaker::createAllHistos() {
   /// Much simpler to create histos now: just add them to
   /// hs with hs.setHisto(name,nbins,min,max);
 //    hs.setHisto("nVtx", 25, -0.5, 35);
-    hs.setHisto("photonet", 5,22,100);
+    hs.setHisto("Orig_photonet", 5,22,100);
+	hs2.setHisto("lep_photonet", 5,22,100);
 //    hs.setHisto("Mjj",20,0,4000);
-	hs.setHisto("photon_sieie",50,0.004,0.018);
-    hs.setHisto("photoneta", 8,-2.5,2.5);
+	hs.setHisto("Orig_photon_sieie",50,0.004,0.018);
+    hs2.setHisto("lep_photon_sieie",50,0.004,0.018);
+	hs.setHisto("Orig_photoneta", 8,-2.5,2.5);
+	hs2.setHisto("lep_photoneta", 8,-2.5,2.5);
 //    hs.setHisto("ptVlepJEC", 25,0,1000);
-    hs.setHisto("mtVlepJECnew", 30,0,200);
+    hs.setHisto("Orig_mtVlepJECnew", 30,0,200);
+	hs2.setHisto("lep_mtVlepJECnew", 30,0,200);
 //    hs.setHisto("photonsieie", 25,0,0.02);
 //    hs.setHisto("photonphoiso", 20,0,10.);
 //	hs.setHisto("photonchiso",20,0,10);
-	hs.setHisto("ptlep1", 20, 25,200);
-	hs.setHisto("d0vtx",100,-0.5,0.5);
-	hs.setHisto("dzvtx",100,-1,1);
-	hs.setHisto("muisolation",20,0.0,0.4);
-    hs.setHisto("etalep1", 25,-2.5,2.5);
+	hs.setHisto("Orig_ptlep1", 20, 25,200);
+	hs2.setHisto("lep_ptlep1", 20, 25,200);
+	hs.setHisto("Orig_d0vtx",100,-0.5,0.5);
+	hs2.setHisto("lep_d0vtx",100,-0.5,0.5);
+	hs.setHisto("Orig_dzvtx",100,-1,1);
+	hs2.setHisto("lep_dzvtx",100,-1,1);
+	hs.setHisto("Orig_muisolation",20,0.0,0.4);
+	hs2.setHisto("lep_muisolation",20,0.0,0.4);
+    hs.setHisto("Orig_etalep1", 25,-2.5,2.5);
+	hs2.setHisto("lep_etalep1", 25,-2.5,2.5);
 ///////    
 //	hs.setHisto("zepp",25,0.0,3.5);
 //	hs.setHisto("photonphi",25,-4,4);
 //	hs.setHisto("photon_pt",25,20,400);
-	hs.setHisto("jet1eta",25,0,5);
-	hs.setHisto("jet2eta",25,0,5);
+	hs.setHisto("Orig_jet1eta",25,0,5);
+	hs2.setHisto("lep_jet1eta",25,0,5);
+	hs.setHisto("Orig_jet2eta",25,0,5);
+	hs2.setHisto("lep_jet2eta",25,0,5);
 //	hs.setHisto("jet1phi",25,0,3.2);
 //	hs.setHisto("jet2phi",25,0,3.2);
 //	hs.setHisto("eta_jj",20,2.4,5.2);
 //	hs.setHisto("phi_jj",20,0,3.2);
-	hs.setHisto("jet1pt",10,40,200);
-	hs.setHisto("jet2pt",10,30,200);
-    hs.setHisto("MET_et",20,0,200);
-//    hs.setHisto("",,,);
-//    hs.setHisto("",,,);
-//    hs.setHisto("",,,);
-//    hs.setHisto("",,,);
+	hs.setHisto("Orig_jet1pt",10,40,200);
+	hs2.setHisto("lep_jet1pt",10,40,200);
+	hs.setHisto("Orig_jet2pt",10,30,200);
+	hs2.setHisto("lep_jet2pt",10,30,200);
+    hs.setHisto("Orig_MET_et",20,0,200);
+	hs2.setHisto("lep_MET_et",20,0,200);
  
   char buffer[256];
   char buffer2[256];
 
   nVars = hs.vars.size();
+  nVars2 = hs2.vars.size();
 //  Double_t xAxis8[4] = {400, 700, 1200, 2500};
 
   for(int i = 0; i!= nVars; ++i) {
@@ -520,7 +536,41 @@ void EDBRHistoMaker::createAllHistos() {
     theHistograms[hs.vars[i]] = histogram;
   }
 
+//}
+
+///////////<<
+
+  for(int i = 0; i!= nVars2; ++i) {
+    sprintf(buffer,"%s_mu",hs2.vars[i].c_str());
+//    sprintf(buffer,"%s_el",hs.vars[i].c_str());
+    sprintf(buffer2,"%s;%s;Number of events;",hs2.vars[i].c_str(),hs2.vars[i].c_str());
+//    if(i != 20)
+        TH1D* histogram = new TH1D(buffer,
+                   buffer2,
+                   hs2.nBins[i],
+                   hs2.minBin[i],
+                   hs2.maxBin[i]);
+//  if(i==2) TH1D* histogram = new TH1D(buffer, buffer2, 3, xAxis8);
+//  histogram->SetMinimum(1.0);
+    histogram->SetMinimum(0.01);
+    histogram->SetStats(kFALSE);
+    histogram->SetDirectory(0);
+    histogram->Sumw2();
+    theHistograms2[hs2.vars[i]] = histogram;
+  }
+
+
+
 }
+
+
+//////////>>
+
+
+
+
+
+
 
 void EDBRHistoMaker::printAllHistos() {
   printf("We have %i histograms \n",int(theHistograms.size()));
@@ -530,6 +580,17 @@ void EDBRHistoMaker::printAllHistos() {
     // Repeat if you also want to iterate through the second map.
   }
 }
+
+void EDBRHistoMaker::printAllHistos2() {
+  printf("We have %i histograms \n",int(theHistograms2.size()));
+  typedef std::map<std::string, TH1D*>::iterator it_type;
+  for(it_type iterator = theHistograms2.begin(); iterator != theHistograms2.end(); iterator++) {
+    //iterator->second->Print();
+    // Repeat if you also want to iterate through the second map.
+  }
+}
+
+
 
 void EDBRHistoMaker::saveAllHistos(std::string outFileName) {
 
@@ -542,6 +603,19 @@ void EDBRHistoMaker::saveAllHistos(std::string outFileName) {
   }
   outFile->Close();
 }
+
+void EDBRHistoMaker::saveAllHistos2(std::string outFileName) {
+
+  TFile* outFile = TFile::Open(outFileName.c_str(),"RECREATE");
+
+  for(int i = 0; i!=nVars2; ++i) {
+    std::string name = hs2.vars[i];
+    const TH1D* thisHisto = this->theHistograms2[name];
+    thisHisto->Write();
+  }
+  outFile->Close();
+}
+
 
 ///----------------------------------------------------------------
 /// This is the important function, the loop over all events.
@@ -569,13 +643,12 @@ void EDBRHistoMaker::Loop(std::string outFileName){
 
 
     for (Long64_t jentry=0; jentry<nentries;jentry++) {
-    //    for (Long64_t jentry=0; jentry<10000;jentry++) {
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
 
     nb = fChain->GetEntry(jentry);   nbytes += nb;
 
-    if(jentry%100000==0) std::cout << "Entry num " << jentry << std::endl;
+    if(jentry%1000000==0) std::cout << "Entry num " << jentry << std::endl;
 
  
     // int bin = hR1_->FindBin(nVtx);
@@ -594,12 +667,6 @@ if(lumiWeight <0) continue;
       if(jentry==0)printf("Unitary weights set!\n");
       actualWeight=1.0;
     }
-/*	
-    if(set_50_to_400_Weights_) {
-      if(jentry==0)printf("50_to_400 weights set!\n");
-      actualWeight=0.0773722;
-    }
-*/
     // We get the histogram from the map by string and fill it.
     // We could wrap all the fills in the this->eventPassesCut()
     // to fill histograms only for the events which pass a given
@@ -607,21 +674,82 @@ if(lumiWeight <0) continue;
     // Single / Double jet ...) 
 
     // Remember: bool eventPassesCut(double ptZ_threshold, double ptlep1_threshold );
-    //if(eventPassesCut(20, 20)){
 
 
    //   int bveto=1;
-     // for(int i=0; i<8; i++)  {
-
-	//if(ak4jet_pt[i]>30 && ak4jet_icsv[i]>0.890  && fabs(ak4jet_eta[i])<2.4  && ak4jet_IDLoose[i]>0 && deltaRAK4AK8[i]>=0.8) {bveto=0; break;}
-
- //     }
 
 	//Int_t nLooseLep=nLooseEle+nLooseMu;
-		
-  	if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(muisolation)<0.15 && abs(d0vtx)<0.2 && abs(dzvtx)<0.5 && ptlep1>25 && fabs(etalep1)<2.1 && MET_et>35 && mtVlepJECnew>40);
+
+
+//  	if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(muisolation)<0.15 && abs(d0vtx)<0.2 && abs(dzvtx)<0.5 && ptlep1>25 && fabs(etalep1)<2.1 && MET_et>35 && mtVlepJECnew>40);
    //	&& photonet>22 && fabs(photoneta)<1.44 && jet1pt>40 && jet2pt>30 && abs(jet1eta)<4.7 && abs(jet2eta)<4.7 );
-	  else continue;
+//	  else continue;
+
+		if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1) //;
+		{
+			if(ptlep1>25 && fabs(etalep1)<2.1);
+			else continue;
+
+            int iswjets = 0;
+            int isnotwets = 0;
+            int iszjets = 0;
+            int isttjets = 0;
+
+            TString filename = fileTMP_->GetName();
+            if (filename.Contains("WJets") && isprompt!= 1){
+                iswjets = 1;
+             //   std::cout<<"WJETs"<<iswjets<<std::endl;
+                }
+            if (filename.Contains("ZJets") && isprompt!= 1){
+                iszjets = 1;
+                }
+            if (filename.Contains("TTJets") && isprompt!= 1){
+                isttjets = 1;
+                }
+            if (!(filename.Contains("WJets")) && !(filename.Contains("ZJets")) && !(filename.Contains("TTJets")) ) {
+                isnotwets = 1;
+                }
+
+
+            if (isnotwets>0 || iswjets>0 || iszjets>0 || isttjets>0) {
+//    (theHistograms["nVtx"])->Fill(nVtx,actualWeight);
+      (theHistograms2["lep_photonet"])->Fill(photonet,actualWeight);
+ //     (theHistograms["Mjj"])->Fill(Mjj,actualWeight);
+      (theHistograms2["lep_photon_sieie"])->Fill(photon_sieie,actualWeight);
+      (theHistograms2["lep_photoneta"])->Fill(photoneta,actualWeight);
+//    (theHistograms["ptVlepJEC"])->Fill(ptVlepJEC,actualWeight);
+      (theHistograms2["lep_mtVlepJECnew"])->Fill(mtVlepJECnew,actualWeight);
+//      (theHistograms["photonsieie"])->Fill(photonsieie,actualWeight);
+//      (theHistograms["photonphoiso"])->Fill(photonphoiso,actualWeight);
+//    (theHistograms["photonchiso"])->Fill(photonchiso,actualWeight);
+      (theHistograms2["lep_ptlep1"])->Fill(ptlep1,actualWeight);
+      (theHistograms2["lep_d0vtx"])->Fill(d0vtx,actualWeight);
+      (theHistograms2["lep_dzvtx"])->Fill(dzvtx,actualWeight);
+      (theHistograms2["lep_muisolation"])->Fill(muisolation,actualWeight);
+      (theHistograms2["lep_etalep1"])->Fill(etalep1,actualWeight);
+//////
+//    (theHistograms["zepp"])->Fill(zepp,actualWeight);         //zepp
+//    (theHistograms["photonphi"])->Fill(photonphi,actualWeight);//photonphi
+//      (theHistograms["photon_pt"])->Fill(photon_pt[0],actualWeight);
+      (theHistograms2["lep_jet1pt"])->Fill(jet1pt,actualWeight);
+      (theHistograms2["lep_jet2pt"])->Fill(jet2pt,actualWeight);
+      (theHistograms2["lep_jet1eta"])->Fill(jet1eta,actualWeight);
+      (theHistograms2["lep_jet2eta"])->Fill(jet2eta,actualWeight);
+//    (theHistograms["jet1phi"])->Fill(jet1phi,actualWeight);
+//    (theHistograms["jet2phi"])->Fill(jet2phi,actualWeight); 
+//    (theHistograms["MET_et"])->Fill(MET_et,actualWeight);
+//  double etajj=jet2eta-jet1eta; if((etajj)<0) etajj=-etajj;  
+//    (theHistograms["eta_jj"])->Fill(etajj,actualWeight);
+//  double phijj=jet2phi-jet1phi; if(phijj<0) phijj=-phijj; if(phijj>3.14159265358) phijj=2*3.14159265358-phijj;
+//if(phijj>3.14) cout<<"no"<<endl<<phijj<<endl;
+//    (theHistograms["phi_jj"])->Fill(phijj,actualWeight);
+    //  (theHistograms["philep1"])->Fill(philep1,actualWeight);
+      (theHistograms2["lep_MET_et"])->Fill(MET_et,actualWeight);
+     // //end if eventPassesCut
+		}
+	}
+		else continue;
+				
 
             int iswjets = 0;
             int isnotwets = 0;
@@ -645,31 +773,29 @@ if(lumiWeight <0) continue;
  
  
             if (isnotwets>0 || iswjets>0 || iszjets>0 || isttjets>0) {
-//if(jet1pt>40 && jet2pt>30 && abs(jet1eta)<4.7 && abs(jet2eta)<4.7 && abs(jet1metPhi)>0.4 && abs(jet2metPhi)>0.4 && Mjj>200 && drla>0.5  ) 
-//{
 //    (theHistograms["nVtx"])->Fill(nVtx,actualWeight);
-      (theHistograms["photonet"])->Fill(photonet,actualWeight);
+      (theHistograms["Orig_photonet"])->Fill(photonet,actualWeight);
  //     (theHistograms["Mjj"])->Fill(Mjj,actualWeight);
-	  (theHistograms["photon_sieie"])->Fill(photon_sieie,actualWeight);
-      (theHistograms["photoneta"])->Fill(photoneta,actualWeight);
+	  (theHistograms["Orig_photon_sieie"])->Fill(photon_sieie,actualWeight);
+      (theHistograms["Orig_photoneta"])->Fill(photoneta,actualWeight);
 //    (theHistograms["ptVlepJEC"])->Fill(ptVlepJEC,actualWeight);
-      (theHistograms["mtVlepJECnew"])->Fill(mtVlepJECnew,actualWeight);
+      (theHistograms["Orig_mtVlepJECnew"])->Fill(mtVlepJECnew,actualWeight);
 //      (theHistograms["photonsieie"])->Fill(photonsieie,actualWeight);
 //      (theHistograms["photonphoiso"])->Fill(photonphoiso,actualWeight);
 //	  (theHistograms["photonchiso"])->Fill(photonchiso,actualWeight);
-	  (theHistograms["ptlep1"])->Fill(ptlep1,actualWeight);
-	  (theHistograms["d0vtx"])->Fill(d0vtx,actualWeight);                   
-	  (theHistograms["dzvtx"])->Fill(dzvtx,actualWeight);                   
-	  (theHistograms["muisolation"])->Fill(muisolation,actualWeight); 
-      (theHistograms["etalep1"])->Fill(etalep1,actualWeight);
+	  (theHistograms["Orig_ptlep1"])->Fill(ptlep1,actualWeight);
+	  (theHistograms["Orig_d0vtx"])->Fill(d0vtx,actualWeight);                   
+	  (theHistograms["Orig_dzvtx"])->Fill(dzvtx,actualWeight);                   
+	  (theHistograms["Orig_muisolation"])->Fill(muisolation,actualWeight); 
+      (theHistograms["Orig_etalep1"])->Fill(etalep1,actualWeight);
 //////
 // 	  (theHistograms["zepp"])->Fill(zepp,actualWeight);			//zepp
 //	  (theHistograms["photonphi"])->Fill(photonphi,actualWeight);//photonphi
 //      (theHistograms["photon_pt"])->Fill(photon_pt[0],actualWeight);
-	  (theHistograms["jet1pt"])->Fill(jet1pt,actualWeight);
-	  (theHistograms["jet2pt"])->Fill(jet2pt,actualWeight);
-	  (theHistograms["jet1eta"])->Fill(jet1eta,actualWeight);
-	  (theHistograms["jet2eta"])->Fill(jet2eta,actualWeight);
+	  (theHistograms["Orig_jet1pt"])->Fill(jet1pt,actualWeight);
+	  (theHistograms["Orig_jet2pt"])->Fill(jet2pt,actualWeight);
+	  (theHistograms["Orig_jet1eta"])->Fill(jet1eta,actualWeight);
+	  (theHistograms["Orig_jet2eta"])->Fill(jet2eta,actualWeight);
 //	  (theHistograms["jet1phi"])->Fill(jet1phi,actualWeight);
 //	  (theHistograms["jet2phi"])->Fill(jet2phi,actualWeight); 
 //	  (theHistograms["MET_et"])->Fill(MET_et,actualWeight);
@@ -679,12 +805,12 @@ if(lumiWeight <0) continue;
 //if(phijj>3.14) cout<<"no"<<endl<<phijj<<endl;
 //	  (theHistograms["phi_jj"])->Fill(phijj,actualWeight);
     //  (theHistograms["philep1"])->Fill(philep1,actualWeight);
-      (theHistograms["MET_et"])->Fill(MET_et,actualWeight);
-     // }//end if eventPassesCut
-// } 
-              }
+      (theHistograms["Orig_MET_et"])->Fill(MET_et,actualWeight);
+     // //end if eventPassesCut
+ //   
+
+	}
   }//end loop over entries
-   cout << "after cut: " << numbe_out << "*actualweight" << actualWeight << " result " << numbe_out*actualWeight << endl; 
-  //std::cout<<"From makeHisto: the histo with #vtx has "<<(theHistograms["nVtx"])->GetEntries()<<" entries"<<std::endl;
   this->saveAllHistos(outFileName);
+  this->saveAllHistos2(outFileName);
 }
