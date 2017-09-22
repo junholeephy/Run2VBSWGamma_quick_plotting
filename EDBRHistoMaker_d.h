@@ -463,16 +463,16 @@ void EDBRHistoMaker_d::createAllHistos() {
   /// Much simpler to create histos now: just add them to
   /// hs with hs.setHisto(name,nbins,min,max);
 //    hs.setHisto("nVtx", 25, -0.5, 35);
-    hs.setHisto("photonet", 20,20,400);
+    hs.setHisto("photonet", 5,22,100);
 //    hs.setHisto("Mjj",20,0,4000);
 	hs.setHisto("photon_sieie",50,0.004,0.018);
-//    hs.setHisto("photoneta", 25,-2.5,2.5);
+    hs.setHisto("photoneta", 8,-2.5,2.5);
 //    hs.setHisto("ptVlepJEC", 25,0,1000);
-    hs.setHisto("mtVlepJECnew", 50,0,200);
+    hs.setHisto("mtVlepJECnew", 30,0,200);
 //    hs.setHisto("photonsieie", 25,0,0.02);
 //    hs.setHisto("photonphoiso", 20,0,10.);
 //	hs.setHisto("photonchiso",20,0,10);
-	hs.setHisto("ptlep1", 45, 0,200);
+	hs.setHisto("ptlep1", 20, 25,200);
 	hs.setHisto("d0vtx",100,-0.5,0.5);
 	hs.setHisto("dzvtx",100,-1,1);
 	hs.setHisto("muisolation",20,0.0,0.4);
@@ -481,15 +481,15 @@ void EDBRHistoMaker_d::createAllHistos() {
 //	hs.setHisto("zepp",25,0.0,3.5);
 //	hs.setHisto("photonphi",25,-4,4);
 //	hs.setHisto("photon_pt",25,20,400);
-//	hs.setHisto("jet1eta",25,0,5);
-//	hs.setHisto("jet2eta",25,0,5);
+	hs.setHisto("jet1eta",25,0,5);
+	hs.setHisto("jet2eta",25,0,5);
 //	hs.setHisto("jet1phi",25,0,3.2);
 //	hs.setHisto("jet2phi",25,0,3.2);
 //	hs.setHisto("eta_jj",20,2.4,5.2);
 //	hs.setHisto("phi_jj",20,0,3.2);
-//	hs.setHisto("jet1pt",25,40,340);
-//	hs.setHisto("jet2pt",25,30,230);
-    hs.setHisto("MET_et",40,0,400);
+	hs.setHisto("jet1pt",10,40,200);
+	hs.setHisto("jet2pt",10,30,200);
+    hs.setHisto("MET_et",20,0,200);
 //    hs.setHisto("",,,);
 //    hs.setHisto("",,,);
 //    hs.setHisto("",,,);
@@ -619,75 +619,8 @@ if(lumiWeight <0) continue;
 
 	//Int_t nLooseLep=nLooseEle+nLooseMu;
  
-
-	
-
-      
-//		if(lep==13 && photonet>15. && photonet<100. && HLT_Mu1>0 && drla>0.5 && fabs(photoneta)<1.44 && ptlep1>25. && fabs(etalep1)<2.1 && nlooseeles==0 && nloosemus<2 && MET_et>35.0 );
-
- 
- //      if(lep==13 && photonet>20. &&photonet<400 /* && HLT_Mu1>0*/ && drla>0.5 && fabs(photoneta)<1.44 && ptlep1>25. && fabs(etalep1)<2.1 && nlooseeles==0     && nloosemus<3 && MET_et>35.0  /*jet1pt>85 && jet2pt>75*/ && jet1pt>40 && jet2pt>30 && fabs(jet1eta)<4.7 && fabs(jet2eta)<4.7 &&  Mjj>400  && fabs(jet2eta-jet1eta)>2.4  && fabs(MET_phi-jet1phi)>0.4 && fabs(MET_phi-jet2phi)> 0.4  &&  sqrt((philep1-photonphi)*(philep1-photonphi)+(etalep1-photoneta)*(etalep1-photoneta))>0.5  &&   sqrt((jet1phi-philep1)*(jet1phi-philep1)+(jet1eta-etalep1)*(jet1eta-etalep1))>0.5  &&  sqrt((jet2phi-philep1)*(jet2phi-philep1)+(jet2eta-etalep1)*(jet2eta-etalep1))>0.5  &&  sqrt((jet1phi-photonphi)*(jet1phi-photonphi)+(jet1eta-photoneta)*(jet1eta-photoneta))>0.5 && sqrt((jet2phi-photonphi)*(jet2phi-photonphi)+(jet2eta-photoneta)*(jet2eta-photoneta))>0.5   && zepp < 0.5);
-//        if(lep==13 && photonet>15. && photonet<45. && HLT_Mu1>0 && drla>0.7 && fabs(photoneta)>1.556 && fabs(photoneta)<2.5 && ptlep1>30. && fabs(etalep1)<2.1 && nlooseeles==0 && nloosemus<2 && MET_et>40.0);
-//		if(lep==13 && photonet>20.&& fabs(photoneta)<1.4442 && MET_et>20 && ptlep1>20 && fabs(etalep1)<2.4 && Mjj>700 && fabs(jet2eta-jet1eta)>2.4 && jet1pt>30 && jet2pt>30 && fabs(jet1eta)<4.7 && fabs(jet2eta)<4.7 && sqrt((philep1-photonphi)*(philep1-photonphi)+(etalep1-photoneta)*(etalep1-photoneta))>0.4  &&   sqrt((jet1phi-philep1)*(jet1phi-philep1)+(jet1eta-etalep1)*(jet1eta-etalep1))>0.4  &&  sqrt((jet2phi-philep1)*(jet2phi-philep1)+(jet2eta-etalep1)*(jet2eta-etalep1))>0.4  &&  sqrt((jet1phi-photonphi)*(jet1phi-photonphi)+(jet1eta-photoneta)*(jet1eta-photoneta))>0.4 && sqrt((jet2phi-photonphi)*(jet2phi-photonphi)+(jet2eta-photoneta)*(jet2eta-photoneta))>0.4 && zepp < 0.5) ; 
-
-//	if(lep==13 && ptlep1>35. && fabs(etalep1)<2.4 && MET_et >20 &&  fabs(MET_phi)<2.4  && nlooseeles==0 && nloosemus<3 );
-//		else continue;
-//	if( drla>0.7 && photonet>20 && fabs(photoneta)<2.4 && sqrt((philep1-photonphi)*(philep1-photonphi)+(etalep1-photoneta)*(etalep1-photoneta))>0.5  );
-	//		if(lep==13 && ptlep1>20. && fabs(etalep1)<2.4 &&  nlooseeles==0 && nloosemus<3);
-//	  else continue;
-//	if(jet1pt>85 && jet2pt>75 && Mjj>400);
-//`	else continue;
-
-//	if( lep ==13 && ptlep1>35. && fabs(etalep1)<2.4 && MET_et>35 && fabs(MET_phi)<2.4  && photonet>20 && fabs(photoneta)<2.4 && drla>0.7  && jet1pt>40 && jet2pt>30 && fabs(jet1eta)<4.7 && fabs(jet2eta)<4.7 &&  Mjj>400  && fabs(jet2eta-jet1eta)>2.4  && fabs(MET_phi-jet1phi)>0.4 && fabs(MET_phi-jet2phi)> 0.4 &&  sqrt((philep1-photonphi)*(philep1-photonphi)+(etalep1-photoneta)*(etalep1-photoneta))>0.5  &&   sqrt((jet1phi-philep1)*(jet1phi-philep1)+(jet1eta-etalep1)*(jet1eta-etalep1))>0.5  &&  sqrt((jet2phi-philep1)*(jet2phi-philep1)+(jet2eta-etalep1)*(jet2eta-etalep1))>0.5  &&  sqrt((jet1phi-photonphi)*(jet1phi-photonphi)+(jet1eta-photoneta)*(jet1eta-photoneta))>0.5 && sqrt((jet2phi-photonphi)*(jet2phi-photonphi)+(jet2eta-photoneta)*(jet2eta-photoneta))>0.5 ) ; 
-	//	&& jet1pt>40 && jet2pt>30 && fabs(jet1eta)<4.7 && fabs(jet2eta)<4.7 &&  Mjj>400  && fabs(jet2eta-jet1eta)>2.4  && fabs(MET_phi-jet1phi)>0.4 && fabs(MET_phi-jet2phi)> 0.4  &&  sqrt((philep1-photonphi)*(philep1-photonphi)+(etalep1-photoneta)*(etalep1-photoneta))>0.5  &&   sqrt((jet1phi-philep1)*(jet1phi-philep1)+(jet1eta-etalep1)*(jet1eta-etalep1))>0.5  &&  sqrt((jet2phi-philep1)*(jet2phi-philep1)+(jet2eta-etalep1)*(jet2eta-etalep1))>0.5  &&  sqrt((jet1phi-photonphi)*(jet1phi-photonphi)+(jet1eta-photoneta)*(jet1eta-photoneta))>0.5 && sqrt((jet2phi-photonphi)*(jet2phi-photonphi)+(jet2eta-photoneta)*(jet2eta-photoneta))>0.5) ;
-/*if(lep==13 && mtVlepJECnew>50. && ptlep1>20. &&	fabs(etalep1)<2.4 && MET_et>20. && nlooseeles==0 && nloosemus<2 
-		&& photonet>20 && fabs(photoneta)<1.4442 && drla>0.7 && photonet<400 
-		&& jet1pt>40 && jet2pt>30 && fabs(jet1eta)<4.7 && fabs(jet2eta)<4.7 &&  Mjj>700  && fabs(jet2eta-jet1eta)>2.4 
-		
-		&& fabs(MET_phi-jet1phi)>0.4 && fabs(MET_phi-jet2phi)> 0.4 &&  sqrt((philep1-photonphi)*(philep1-photonphi)+(etalep1-photoneta)*(etalep1-photoneta))>0.5  &&   sqrt((jet1phi-philep1)*(jet1phi-philep1)+(jet1eta-etalep1)*(jet1eta-etalep1))>0.5  &&  sqrt((jet2phi-philep1)*(jet2phi-philep1)+(jet2eta-etalep1)*(jet2eta-etalep1))>0.5  &&  sqrt((jet1phi-photonphi)*(jet1phi-photonphi)+(jet1eta-photoneta)*(jet1eta-photoneta))>0.5 && sqrt((jet2phi-photonphi)*(jet2phi-photonphi)+(jet2eta-photoneta)*(jet2eta-photoneta))>0.5
-	);*/
-//double dphijj_v =-10;   if(fabs(jet1eta)<4.7 && fabs(jet2eta)<4.7) {if(fabs(jet1phi-jet2phi)>=3.1415926) dphijj_v=(fabs(jet1phi-jet2phi))-3.1415926; else dphijj_v=(fabs(jet1phi-jet2phi));}
-/*
-	if(	//	HLT_Mu3>0 &&
-			lep==13 &&
-			nlooseeles==0 && nloosemus<3 && 
-			mtVlepJECnew>50. && ptlep1>30. && photon_pt<=400 && fabs(etalep1)<2.1 && MET_et>30. && drla>0.7 &&
-			photon_pt>=20 &&
-			photon_pev==1 &&
-			photon_hoe<0.05&&
-			photon_chiso<1.37&&
-			photon_nhiso<(1.06 + 0.014*photon_pt + 0.000019*photon_pt*photon_pt) &&
-			photon_phoiso<(0.28 + 0.0053*photon_pt) &&
-			photon_sieie > 0.004 &&
-			TMath::Abs(photon_eta)<1.4442
-			) ;
-	else continue;	
-*/
-//uncomment this
-/*
-		if( HLT_Mu3>0 && lep==13 && mtVlepJECnew>50. && ptlep1>30. &&   fabs(etalep1)<2.1 && MET_et>30. && nlooseeles==0 && nloosemus<3 && 
-		 photonet>20 && fabs(photoneta)<1.4442 && drla>0.7 && photonet<200 && 
-		 jet1pt>40 && jet2pt>30 && fabs(jet1eta)<4.7 && fabs(jet2eta)<4.7 &&  Mjj>400   
-			&&fabs(jet2eta-jet1eta) > 2.4 
-			//&& dphijj_v > 0.3 
-//			&& zepp < 1.6 
-			
-			&& fabs(MET_phi-jet1phi)>0.4 && fabs(MET_phi-jet2phi)> 0.4 &&  sqrt((philep1-photonphi)*(philep1-photonphi)+(etalep1-photoneta)*(etalep1-photoneta))>0.5  &&   sqrt((jet1phi-philep1)*(jet1phi-philep1)+(jet1eta-etalep1)*(jet1eta-etalep1))>0.5  &&  sqrt((jet2phi-philep1)*(jet2phi-philep1)+(jet2eta-etalep1)*(jet2eta-etalep1))>0.5  &&  sqrt((jet1phi-photonphi)*(jet1phi-photonphi)+(jet1eta-photoneta)*(jet1eta-photoneta))>0.5 && sqrt((jet2phi-photonphi)*(jet2phi-photonphi)+(jet2eta-photoneta)*(jet2eta-photoneta))>0.5
-
-
-		);
- 
-else continue ;
-*/
-//	  if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1);
-//  	  if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(muisolation)<0.15 && abs(d0vtx)<0.2 && abs(dzvtx)<0.5  );
-//		if(lep==13 && nlooseeles==0 && nloosemus<2  && abs(muisolation)<0.15 && abs(d0vtx)<0.2 && abs(dzvtx)<0.5 && HLT_Mu1 ==1 );
-//	 if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(muisolation)<0.15 && abs(d0vtx)<0.2 && abs(dzvtx)<0.05  );
-//		if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(muisolation)<0.15 && abs(d0vtx)<0.02 && abs(dzvtx)<0.05  );
-//		if(lep==13 && nlooseeles==0 && nloosemus<2  && abs(muisolation)<0.15 && abs(d0vtx)<0.02 && abs(dzvtx)<0.05 && HLT_Mu1 ==1 );
-//		if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(d0vtx)<0.2 && abs(dzvtx)<0.5);
-//		if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(muisolation)<0.15 && abs(d0vtx)<0.2 && abs(dzvtx)<0.05 && ptlep1>25 && fabs(etalep1)<2.1);
-	  if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(muisolation)<0.04 && abs(d0vtx)<0.2 && abs(dzvtx)<0.5  );
+	  if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(muisolation)<0.15 && abs(d0vtx)<0.2 && abs(dzvtx)<0.5 && ptlep1>25 && fabs(etalep1)<2.1 && MET_et>35 && mtVlepJECnew>40);
+	 // && photonet>22 && fabs(photoneta)<1.44 && jet1pt>40 && jet2pt>30 && abs(jet1eta)<4.7 && abs(jet2eta)<4.7);
 	  else continue;
 
 
@@ -719,7 +652,7 @@ else continue ;
       (theHistograms["photonet"])->Fill(photonet,actualWeight);
 //      (theHistograms["Mjj"])->Fill(Mjj,actualWeight);
 	  (theHistograms["photon_sieie"])->Fill(photon_sieie,actualWeight);
-//      (theHistograms["photoneta"])->Fill(photoneta,actualWeight);
+      (theHistograms["photoneta"])->Fill(photoneta,actualWeight);
 //    (theHistograms["ptVlepJEC"])->Fill(ptVlepJEC,actualWeight);
       (theHistograms["mtVlepJECnew"])->Fill(mtVlepJECnew,actualWeight);
 //      (theHistograms["photonsieie"])->Fill(photonsieie,actualWeight);
@@ -734,10 +667,10 @@ else continue ;
 // 	  (theHistograms["zepp"])->Fill(zepp,actualWeight);			//zepp
 //	  (theHistograms["photonphi"])->Fill(photonphi,actualWeight);//photonphi
 //      (theHistograms["photon_pt"])->Fill(photon_pt[0],actualWeight);
-//	  (theHistograms["jet1pt"])->Fill(jet1pt,actualWeight);
-//	  (theHistograms["jet2pt"])->Fill(jet2pt,actualWeight);
-//	  (theHistograms["jet1eta"])->Fill(jet1eta,actualWeight);
-//	  (theHistograms["jet2eta"])->Fill(jet2eta,actualWeight);
+	  (theHistograms["jet1pt"])->Fill(jet1pt,actualWeight);
+	  (theHistograms["jet2pt"])->Fill(jet2pt,actualWeight);
+	  (theHistograms["jet1eta"])->Fill(jet1eta,actualWeight);
+	  (theHistograms["jet2eta"])->Fill(jet2eta,actualWeight);
 //	  (theHistograms["jet1phi"])->Fill(jet1phi,actualWeight);
 //	  (theHistograms["jet2phi"])->Fill(jet2phi,actualWeight); 
 //	  (theHistograms["MET_et"])->Fill(MET_et,actualWeight);
