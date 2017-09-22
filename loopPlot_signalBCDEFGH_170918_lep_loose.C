@@ -34,12 +34,7 @@ void loopPlot_signalBCDEFGH_170918_lep_loose(){
   int  flavour = 0; 
   if(wantElectrons) flavour=11; if(wantMuons) flavour=13; if(wantElectrons and wantMuons) flavour=0;
   
-  /// Luminosity value in fb^-1
-//  double lumiValue = 10.0; 
-//  double lumiValue = 4.353;  //12.70;  //5.80  //2.60;  // 4.30;
-//	double lumiValue = 2.6;
-	double lumiValue = 12.516;
-/// Should we scale the histograms to data?
+	double lumiValue = 35.103;
   bool scaleToData = false;
 //	bool scaleToData = true;
 // Should we scale only wjets to make total MC = DATA?
@@ -54,21 +49,13 @@ void loopPlot_signalBCDEFGH_170918_lep_loose(){
 //	bool dopileupreweight = true;	
 
   /// Path to wherever the files with the trees are. 
-//	std::string pathToTrees="./making_root_small/outtree/";
 	std::string pathToTrees="./making_root_small/outtree_170918_lep_loose/";
-//	std::string pathToTrees="./making_root_small/outtree1/";
-//	std::string pathToTrees="./making_root_small/outtree_selfD/";
 
 
-//  std::string pathToTrees="./";
   std::string outputDir = "./";
-  /// Setup names of data files for trees.
 
 
   const int nDATA=7;//set to zero if you don't want to plot
-//  std::string dataLabels[nDATA]={"outSingleMuon_Run2016B","outSingleMuon_Run2016C","outSingleMuon_Run2016D"};
-//	std::string dataLabels[nDATA]={"outSingleMuon_Run2016C_s"};
-//	std::string dataLabels[nDATA]={"outSingleMuon_Run2016BCD_s"};
 
 	std::string dataLabels[nDATA]={"outSingleMuon_Run2016B_s","outSingleMuon_Run2016C_s","outSingleMuon_Run2016D_s","outSingleMuon_Run2016E_s","outSingleMuon_Run2016F_s","outSingleMuon_Run2016G_s","outSingleMuon_Run2016H_s"};
   std::vector<std::string> fData;
@@ -81,33 +68,16 @@ void loopPlot_signalBCDEFGH_170918_lep_loose(){
 
 //  const int nMC=6;
   const int nMC=8;
-  //  const int nMC=1;
-//	std::string mcLabels[nMC]={"ZG","ZJets","VV","ST","TTG","TTJets","WJets","WG"};
-//  std::string mcLabels[nMC]={"ZG","VV","ST","TTG","WG","SingleMuon_Run2016B","SingleMuon_Run2016C","SingleMuon_Run2016D","TTJets","ZJets"};
-//	std::string mcLabels[nMC]={"ST","TTG","WG","ZG","VV","TTJets","ZJets","WJets"};
-//	std::string mcLabels[nMC]={"ST","TTG","TTJets","VV","ZJets","ZG","WJets","WG"};
 
 	std::string mcLabels[nMC]={"ST_s","TTG_s","VV_s","ZG_s","WJets_s","ZJets_s","TTJets_s","WG_s"};
-//	std::string mcLabels[nMC]={"ST_s","TTG_s","VV_s","ZG_s","SingleMuon_Run2016BCD_s","WG_s"};
-
-	//	std::string mcLabels[nMC]={"ST_s","TTG_s","VV_s","ZG_s","WJets_s","WG_s"};
-//	std::string mcLabels[nMC]={"ZG","ZJets","VV","ST","TTG","WG"};
-	//	std::string mcLabels[nMC]={"ZG","ZJets","VV","ST","TTG","TTJets","TTbar","SingleMuon_Run2016C","WG"};
-
-//	std::string mcLabels[nMC]={"ZA","ZJets","VV","ST","TTA","TTJets","WA"};
-//    std::string mcLabels[nMC]={"WJets","Z","VV","Top","WA"};
-//	std::string mcLabels[nMC]={"signal_160503"};
-//outMiniAodv2_Signal_2k_PKU.root
     double kFactorsMC_array[nMC] = {1, 1, 1, 1, 1, 1, 1, 1};
-//  double kFactorsMC_array[nMC] = { 1, 1, 1, 1, 1, 1};
-//	double kFactorsMC_array[nMC] = {1};
-  std::vector<std::string> fMC;
+
+  	std::vector<std::string> fMC;
   for(int ii=0;ii<nMC;ii++){
     fMC.push_back(pathToTrees+"out"+mcLabels[ii]+".root");
   }
 
   std::vector<double> kFactorsMC;
-  //std::cout << "The contents of kFactorsMC are:" << std::endl;
   for (int index=0; index<nMC; index++)
     {
       //std::cout << kFactorsMC_array[index] << std::endl;
@@ -116,11 +86,6 @@ void loopPlot_signalBCDEFGH_170918_lep_loose(){
 
   /// Setup names of MC signal files for trees.
   const int nMCSig=1;
-//WA2Jets_muon_signal_2k.root  //outWA2Jets_muon_signal_2k 
- // std::string mcLabelsSig[nMCSig]={"outsignal50k_muon_160412"};
-//std::string mcLabelsSig[nMCSig]={"outWA+2Jets"}; 
-//std::string mcLabelsSig[nMCSig]={"outWA2jets_160425"};
-//std::string mcLabelsSig[nMCSig]={"outVBS_WGamma_signal_s"};
 std::string mcLabelsSig[nMCSig]={"outVBS_WGamma_signal_s"};
   double kFactorsSig_array[nMCSig] = {1};
   std::vector<double> kFactorsMCSig;
@@ -152,13 +117,6 @@ char buffer[32];
 
   /// The EDBRHistoMaker, for reference
   ///
-  ///EDBRHistoMaker::EDBRHistoMaker(TTree* tree, 
-  ///		       bool wantElectrons,
-  ///		       bool wantMuons,
-  ///		       bool wantSideband,
-  ///		       bool wantSignal,
-  ///		       int  wantNXJets,
-  ///              bool isZZchannel)
 
   printf("\nStart making histograms\n\n");
 
@@ -225,23 +183,6 @@ cout<<"no error so far"<<endl;
         //  TTree *treeMC = (TTree*)fileMC->Get("treeDumper/PKUCandidates");
           TTree *treeMC = (TTree*)fileMC->Get("demo");
 		
-//	  if( i==5 || i==6 || i==7) 
-/*		if(i==4)
-  		  {          EDBRHistoMaker_a* maker_a = new EDBRHistoMaker_a(treeMC,
-                                   fileMC,
-                                   hisRatio,
-                             wantElectrons,
-                             wantMuons, 
-                             wantSideband,
-                             wantSignal, 
-                             wantFullRange,
-                             wantNXJets,
-                             isZZchannel);
-		maker_a->setUnitaryWeights(false);
-		maker_a->Loop(buffer);
-
-		}
-    else */
         {  EDBRHistoMaker* maker = new EDBRHistoMaker(treeMC,
                                fileMC,
                                hisRatio,
@@ -303,13 +244,6 @@ cout<<"no error so far"<<endl;
   /// This second part is the loop over histograms to create stack plots
   /// ------------------------------------------------------------------  
 
-  //  EDBRHistoMaker::EDBRHistoMaker(TTree* tree,
-  //			 bool wantElectrons,
-  //			 bool wantMuons,
-  //			 bool wantSideband,
-  //			 bool wantSignal,
-  //			 int  wantNXJets,
-  //			 bool isZZchannel){
     
   printf("\nStart looping over histograms\n\n");
   //make nice plots
@@ -329,9 +263,6 @@ cout<<"no error so far"<<endl;
       TH1 *hTMP = (TH1*)key->ReadObj();
       std::string hName=hTMP->GetName();
       printf("Histogram found: %s\n",hName.c_str());
-      //bool isMJJhisto=(hName.find("mJJ")!=std::string::npos);
-      //bool isMZZhisto=(hName.find("mZZ")!=std::string::npos);
-      //if( !isMJJhisto && !isMZZhisto)continue;//skip all histos except MJJ and MZZ
       listOfHistos.push_back(hName);
     }//end while loop
     oneFile->Close();
@@ -359,35 +290,6 @@ cout<<"no error so far"<<endl;
     // For ZZ
   ////// {DYJetsToLL_HT-200to400,DYJetsToLL_HT-200to400,DYJetsToLL_HT-600toInf}
   std::vector<int> fColorsMC;
-/*
-  fColorsMC.push_back(kRed+1);
-  fColorsMC.push_back(kRed+1);
-  fColorsMC.push_back(kRed+1);
-  fColorsMC.push_back(kGreen);
-  fColorsMC.push_back(kGreen);
-  fColorsMC.push_back(kGreen);
-  fColorsMC.push_back(kGreen);
-  fColorsMC.push_back(kBlue);
-  fColorsMC.push_back(kBlue);
-  fColorsMC.push_back(kMagenta);
-  fColorsMC.push_back(2);
-  fColorsMC.push_back(2);
-  fColorsMC.push_back(210);*/
-/*
-  fColorsMC.push_back(kMagenta);
-  fColorsMC.push_back(kMagenta);
-//  fColorsMC.push_back(kMagenta);
-  fColorsMC.push_back(kYellow);
-  fColorsMC.push_back(kYellow);
-//  fColorsMC.push_back(kYellow);
-//  fColorsMC.push_back(kYellow);
-  fColorsMC.push_back(kBlue);
-  fColorsMC.push_back(kGreen);
-  fColorsMC.push_back(kMagenta);
-  fColorsMC.push_back(kRed);
-  fColorsMC.push_back(kYellow);
-  fColorsMC.push_back(kYellow);
-*/
 	fColorsMC.push_back(1);
 	fColorsMC.push_back(3);
 	fColorsMC.push_back(7);

@@ -8,12 +8,13 @@
 #include "TCollection.h"
 #include "TKey.h"
 #include "EDBRHistoMaker.h"
+//#include "EDBRHistoPlotter_qiangming.h"
 #include "EDBRHistoPlotter.h"
 #include "test.C"
 #include "CMSTDRStyle.h"
 //add this if you want to plot fake photon fraction on your control plots
 //#include "EDBRHistoMaker_a_B.h"
-#include "EDBRHistoMaker_d.h"
+//#include "EDBRHistoMaker_d.h"
 
 void loopPlot_signalB_170918_lep_loose(){
 
@@ -225,23 +226,6 @@ cout<<"no error so far"<<endl;
         //  TTree *treeMC = (TTree*)fileMC->Get("treeDumper/PKUCandidates");
           TTree *treeMC = (TTree*)fileMC->Get("demo");
 		
-//	  if( i==5 || i==6 || i==7) 
-/*		if(i==4)
-  		  {          EDBRHistoMaker_a* maker_a = new EDBRHistoMaker_a(treeMC,
-                                   fileMC,
-                                   hisRatio,
-                             wantElectrons,
-                             wantMuons, 
-                             wantSideband,
-                             wantSignal, 
-                             wantFullRange,
-                             wantNXJets,
-                             isZZchannel);
-		maker_a->setUnitaryWeights(false);
-		maker_a->Loop(buffer);
-
-		}
-    else */
         {  EDBRHistoMaker* maker = new EDBRHistoMaker(treeMC,
                                fileMC,
                                hisRatio,
