@@ -602,7 +602,6 @@ void EDBRHistoMaker::Loop(std::string outFileName){
 
 
     for (Long64_t jentry=0; jentry<nentries;jentry++) {
-    //    for (Long64_t jentry=0; jentry<10000;jentry++) {
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
 
@@ -627,26 +626,6 @@ if(lumiWeight <0) continue;
       if(jentry==0)printf("Unitary weights set!\n");
       actualWeight=1.0;
     }
-/*	
-    if(set_50_to_400_Weights_) {
-      if(jentry==0)printf("50_to_400 weights set!\n");
-      actualWeight=0.0773722;
-    }
-*/
-    // We get the histogram from the map by string and fill it.
-    // We could wrap all the fills in the this->eventPassesCut()
-    // to fill histograms only for the events which pass a given
-    // cut (Sideband / SignalRegion, Muon / Electron, 
-    // Single / Double jet ...) 
-
-    // Remember: bool eventPassesCut(double ptZ_threshold, double ptlep1_threshold );
-    //if(eventPassesCut(20, 20)){
-
-
-   //   int bveto=1;
-
-	//Int_t nLooseLep=nLooseEle+nLooseMu;
-
 
 //  	if(lep==13 && nlooseeles==0 && nloosemus<2 && HLT_Mu3 ==1 && abs(muisolation)<0.15 && abs(d0vtx)<0.2 && abs(dzvtx)<0.5 && ptlep1>25 && fabs(etalep1)<2.1 && MET_et>35 && mtVlepJECnew>40);
    //	&& photonet>22 && fabs(photoneta)<1.44 && jet1pt>40 && jet2pt>30 && abs(jet1eta)<4.7 && abs(jet2eta)<4.7 );
@@ -710,16 +689,6 @@ if(lumiWeight <0) continue;
 //	  (theHistograms["phi_jj"])->Fill(phijj,actualWeight);
     //  (theHistograms["philep1"])->Fill(philep1,actualWeight);
       (theHistograms["Orig_MET_et"])->Fill(MET_et,actualWeight);
-     // }//end if eventPassesCut
-// } 
-
-
-
-
-
-
-
-
 
 	}
   }//end loop over entries
