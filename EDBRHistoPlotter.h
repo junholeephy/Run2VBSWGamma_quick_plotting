@@ -219,11 +219,16 @@ void EDBRHistoPlotter::makeLabels()
   int ii=fileNamesMC.size(); 	std::cout<<"number of MC samples: "<<ii<<endl;
   for (size_t i = 0; i != fileNamesMC.size(); i++) {
     TString s1 = fileNamesMC.at(i);
+	std::cout<<" !?!?!?!?!?!?!?!?!?!?!?"<<std::endl<<std::endl<<s1<<"!?!?!?!?!?!?!?"<<std::endl;
     TString s2 = "_.";
     TObjArray* tokens = s1.Tokenize(s2);
     std::string aLabel  = ((TObjString*)(tokens->At(1)))->String().Data();
     std::string aLabel2 = ((TObjString*)(tokens->At(2)))->String().Data();
-    labels.push_back(aLabel);
+	
+	std::cout<<" !?!?!?!?!?!?!?!?!?!?!?"<<std::endl<<std::endl<<aLabel.c_str()<<"!?!?!?!?!?!?!?"<<std::endl;
+	std::cout<<" !?!?!?!?!?!?!?!?!?!?!?"<<std::endl<<std::endl<<aLabel2.c_str()<<"!?!?!?!?!?!?!?"<<std::endl;
+
+	labels.push_back(aLabel);
 //    labels.push_back(aLabel + aLabel2);
   }
   std::cout << "Labels MC done" << std::endl;
