@@ -103,15 +103,12 @@ std::string mcLabelsSig[nMCSig]={"outVBS_WGamma_signal_s"};
 
   /// Setup names of files for histograms (data and MC)
   std::vector<std::string> fHistosData;
-//  std::vector<std::string> fHistosData2;
   std::vector<std::string> fHistosMC;
-//  std::vector<std::string> fHistosMC2;
   std::vector<std::string> fHistosMCSig;
-//  std::vector<std::string> fHistosMCSig2; 
-
+ 
 //  char buffer[256];
 char buffer[64];
-//char buffer2[64];
+char buffer2[64];
   printf("All strings set\n");
 
 
@@ -132,8 +129,6 @@ cout<<"nDATA = "<<nDATA<<endl<<endl;
     std::cout<<"The file is " <<fData.at(i)<<std::endl;
     sprintf(buffer,"histos_%s.root",dataLabels[i].c_str());
     fHistosData.push_back(buffer);
-//	sprintf(buffer2,"2histos_%s.root",dataLabels[i].c_str());
-//	fHistosData2.push_back(buffer2);
     
         std::cout<<"OK??"<<std::endl;
       TFile *fileData = TFile::Open(fData.at(i).c_str());
@@ -166,20 +161,7 @@ cout<<"no error so far"<<endl;
       maker_data->setUnitaryWeights(true);  //??
       maker_data->Loop(buffer);
       //delete maker_data; // This class is badly written and deleting it isn't safe!
-  /*   	EDBRHistoMaker* maker_data2 = new EDBRHistoMaker(treeData,
-                        fileData,
-                        hisRatio,
-                        wantElectrons,
-                         wantMuons,
-                         wantSideband,
-                         wantSignal,
-                         wantFullRange,
-                         wantNXJets,
-                         isZZchannel);
-      maker_data2->setUnitaryWeights(true);  //??
-      maker_data2->Loop(buffer2);
-	*/	
-		fileData->Close();
+      fileData->Close();
     }
     
   }//end loop on data files
@@ -194,8 +176,6 @@ cout<<"no error so far"<<endl;
     std::cout<<"The file is " <<fMC.at(i)<<std::endl;    
     sprintf(buffer,"histos_%s.root",mcLabels[i].c_str());
     fHistosMC.push_back(buffer);
-//	sprintf(buffer2,"2histos_%s.root",mcLabels[i].c_str());
-//	fHistosMC2.push_back(buffer2);
     std::cout<<"test"<<std::endl;   
  
     if(redoHistograms){
@@ -218,21 +198,6 @@ cout<<"no error so far"<<endl;
 	 	maker->setUnitaryWeights(false);
 	    maker->Loop(buffer);	
 		}
-  /*      {  EDBRHistoMaker* maker2 = new EDBRHistoMaker(treeMC,
-                               fileMC,
-                               hisRatio,
-                         wantElectrons,
-                         wantMuons,
-                         wantSideband,
-                         wantSignal,
-                         wantFullRange,
-                         wantNXJets,
-                         isZZchannel);
-
-        maker2->setUnitaryWeights(false);
-        maker2->Loop(buffer2);
-        }*/
-
 
 //      maker->Loop(buffer);
       fileMC->Close();
@@ -250,8 +215,7 @@ cout<<"no error so far"<<endl;
     std::cout<<"The file is " <<fMCSig.at(i)<<std::endl;    
     sprintf(buffer,"histos_%s.root",mcLabelsSig[i].c_str());
     fHistosMCSig.push_back(buffer);
-//	sprintf(buffer2,"2histos_%s.root",mcLabelsSig[i].c_str());
-//	fHistosMCSig2.push_back(buffer2);
+
     if(redoHistograms){
       TFile *fileMCSig = TFile::Open(fMCSig.at(i).c_str());  
       //  TTree *treeMCSig = (TTree*)fileMCSig->Get("treeDumper/PKUCandidates");
@@ -269,22 +233,7 @@ cout<<"no error so far"<<endl;
 //      maker->setUnitaryWeights(false);
 	  maker->setUnitaryWeights(false);
       maker->Loop(buffer);
-/*
-      EDBRHistoMaker* maker2 = new EDBRHistoMaker(treeMCSig,
-                        fileMCSig,
-                            hisRatio,
-                        wantElectrons,
-                         wantMuons,
-                         wantSideband,
-                         wantSignal,
-                         wantFullRange,
-                         wantNXJets,
-                         isZZchannel);
-//      maker->setUnitaryWeights(false);
-      maker2->setUnitaryWeights(false);
-      maker2->Loop(buffer);     
-*/
- //delete maker; // This class is badly written and deleting it isn't safe!
+      //delete maker; // This class is badly written and deleting it isn't safe!
       fileMCSig->Close();
     }
     

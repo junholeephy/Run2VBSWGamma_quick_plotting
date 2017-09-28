@@ -13,7 +13,7 @@
 #include "CMSTDRStyle.h"
 //add this if you want to plot fake photon fraction on your control plots
 //#include "EDBRHistoMaker_a_B.h"
-#include "EDBRHistoMaker_d.h"
+//#include "EDBRHistoMaker_d.h"
 
 void loopPlot_signalBCDEFGH_170918_lep_loose(){
 
@@ -147,7 +147,7 @@ cout<<"no error so far"<<endl;
         std::cout<<"hisRatio = "<<hisRatio<<std::endl;
         }
       if(redoHistograms) {
-      EDBRHistoMaker_d* maker_data = new EDBRHistoMaker_d(treeData,
+      EDBRHistoMaker* maker_data = new EDBRHistoMaker(treeData,
                         fileData,
                         hisRatio,
                         wantElectrons,

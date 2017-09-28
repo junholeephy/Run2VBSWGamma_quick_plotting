@@ -15,7 +15,7 @@
 //#include "EDBRHistoMaker_a_B.h"
 //#include "EDBRHistoMaker_d.h"
 
-void loopPlot_signalF_170918_lep_loose(){
+void loopPlot_signalD_170922_lep_loose(){
 
   gErrorIgnoreLevel=kFatal;//suppresses all info messages
   
@@ -34,7 +34,7 @@ void loopPlot_signalF_170918_lep_loose(){
   int  flavour = 0; 
   if(wantElectrons) flavour=11; if(wantMuons) flavour=13; if(wantElectrons and wantMuons) flavour=0;
   
-	double lumiValue = 3.026;
+	double lumiValue = 4.248;
   bool scaleToData = false;
 //	bool scaleToData = true;
 // Should we scale only wjets to make total MC = DATA?
@@ -49,7 +49,7 @@ void loopPlot_signalF_170918_lep_loose(){
 //	bool dopileupreweight = true;	
 
   /// Path to wherever the files with the trees are. 
-	std::string pathToTrees="./making_root_small/outtree_170918_lep_loose/";
+	std::string pathToTrees="./making_root_small/outtree_170922_lep_loose/";
 
 
   std::string outputDir = "./";
@@ -57,7 +57,7 @@ void loopPlot_signalF_170918_lep_loose(){
 
   const int nDATA=1;//set to zero if you don't want to plot
 
-	std::string dataLabels[nDATA]={"outSingleMuon_Run2016F_s"};
+	std::string dataLabels[nDATA]={"outSingleMuon_Run2016D_s"};
   std::vector<std::string> fData;
   
   for(int ii=0;ii<nDATA;ii++){
